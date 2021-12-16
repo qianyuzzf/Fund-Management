@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
+    "antd-mobile": "^5.0.0-rc.5",
     "axios": "^0.24.0",
     "esbuild-windows-64": "^0.14.1",
     "lodash": "^4.17.21",

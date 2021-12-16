@@ -33,7 +33,7 @@ export const deepLeafFilter = (arr, fn, key = 'children') => {
  */
 export const getType = (target) => {
   const type = Object.prototype.toString.call(target)
-  return type.replace(/^\[object\s(\w+)$/, '$1').toLowerCase()
+  return type.replace(/^\[object\s(\w+)]$/g, '$1').toLowerCase()
 }
 
 /**
@@ -67,4 +67,22 @@ export const convertToArray = (object) => {
     })
   }
   return result
+}
+
+/**
+ * 对一个对象数组深度遍历,会更改原数组
+ * @param {object[]} array
+ * @param {function} fn
+ * @param {string} key
+ * @param {number} deep
+ */
+export const deepEach = (array, fn, key = 'children', deep = 0) => {
+  deep++
+  _.forEach(array, (item, index) => {
+    const children = item[key]
+    if (children && children.length > 0) {
+      deepEach(children, fn, key, deep)
+    }
+    return fn(item, index, deep)
+  })
 }

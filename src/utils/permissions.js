@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import {notCheckPath} from '@/configs'
 import login from '@/axios/instance/login/index'
-import {deepLeafFilter} from '@/utils/common'
+import {deepLeafFilter, deepEach} from '@/utils/common'
 import routes from '@/router/index'
 
 /**
@@ -132,4 +132,56 @@ export const validSafePath = (path) => {
     }
   })
   return !!target
+}
+
+/**
+ * 根据路由路径生成正则表达式
+ * @param {string} path
+ * @returns {RegExp} 正则表达式
+ */
+export const createRegexpByPath = (path) => {
+  if (!path) {
+    throw new Error('createRegexpByPath ---> path must be passed')
+  } else {
+    const array = _.map(path.replace('\\', '/').split('/'), (item) => {
+      if (item.startsWith(':')) {
+        return '(\\w+)'
+      }
+      return item
+    })
+    const string = '^' + array.join('[\\\\|\\/]') + '$'
+    return new RegExp(string, 'i')
+  }
+}
+
+/**
+ * 根据全局的 routes 变量,判断传入路径是否有权限访问
+ * @param {string} path
+ * @param {array} oriRoutes
+ * @param {array} routes
+ * @returns
+ */
+export const checkPermissions = (path, oriRoutes, routes) => {
+  if (!path || validSafePath(path)) {
+    return true
+  }
+  let isOriValid = false
+  let isValid = false
+  deepEach(
+    oriRoutes,
+    (item) => {
+      const reg = createRegexpByPath(item.fullPath)
+      isOriValid = isOriValid || reg.test(path)
+    },
+    'childRoutes'
+  )
+  deepEach(
+    routes,
+    (item) => {
+      const reg = createRegexpByPath(item.fullPath)
+      isValid = isValid || reg.test(path)
+    },
+    'childRoutes'
+  )
+  return isOriValid ? (isValid ? true : '403') : '404'
 }

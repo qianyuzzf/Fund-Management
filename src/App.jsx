@@ -1,5 +1,6 @@
 import {useNavigate} from "react-router-dom"
 import {useEffect} from 'react'
+import {Context} from '@/components/index'
 
 const App = () => {
   const navigate = useNavigate()
@@ -9,9 +10,11 @@ const App = () => {
   }, [navigate])
 
   return (
-    <div className="App">
-      Hello, world!
-    </div>
+    <Context>
+      <div className="App">
+        Hello, world!
+      </div>
+    </Context>
   )
 }
 

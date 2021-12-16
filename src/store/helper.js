@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {connect} from 'react-redux'
+import {connect as ReduxConnect} from 'react-redux'
 import store from '@/store/index'
 import {getType, convertToArray} from '@/utils/common'
 import modules from '@/store/modules'
@@ -14,7 +14,7 @@ import modules from '@/store/modules'
  * @param {any} mapDispatch
  * @returns {any} 高阶函数
  */
-const newConnect = (target, mapState, mapDispatch) => {
+const connect = (target, mapState, mapDispatch) => {
   const type = getType(target)
   const modulesArray = convertToArray(modules)
   let result = []
@@ -100,12 +100,12 @@ const newConnect = (target, mapState, mapDispatch) => {
     typeof mapDispatch === 'function' && (result2 = mapDispatch(result2, dispatch))
     return result2
   }
-  return connect(mapStateToProps, mapDispatchToProps)
+  return ReduxConnect(mapStateToProps, mapDispatchToProps)
 }
 
 const newStore = {
   store,
-  newConnect,
+  connect,
 }
 
 export default newStore
