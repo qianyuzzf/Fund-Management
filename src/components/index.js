@@ -1,5 +1,5 @@
 // common
-import Context from '@/components/common/Context'
+import Context from '@/components/common/Context/index'
 
 export {
   Context,
