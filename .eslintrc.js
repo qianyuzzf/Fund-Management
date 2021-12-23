@@ -50,8 +50,6 @@ module.exports = {
     'no-useless-constructor': 'error', // 不允许不必要的构造函数
     'no-dupe-class-members': 'error', // 不允许在类成员中使用重复名称
     'no-duplicate-imports': ['error', {includeExports: true}], // 不允许重复导入
-    'import/no-mutable-exports': 'error', // 不要导出可变的绑定
-    'import/first': 'error', // import 放在其他所有语句之前
     'dot-notation': 'error', // 访问属性时使用点符号
     'no-restricted-properties': 'error', // 做幂运算时用幂操作符 **
     'no-multi-assign': 'error', // 不要使用连续变量分配
@@ -78,25 +76,26 @@ module.exports = {
     radix: ['error', 'as-needed'], // 需要基数参数
     camelcase: ['error', {properties: 'always'}], // 要求驼峰式命名对象、函数、实例
     'new-cap': 'error', // 要求构造函数名称以大写字母开头
-    'spaced-comment': [
-      'error',
-      'always',
-      {
-        line: {
-          markers: ['/'],
-          exceptions: ['-', '+']
-        },
-        block: {
-          markers: ['!'],
-          exceptions: ['*'],
-          balanced: true
-        }
-      }
-    ], // 注释规范
+    'spaced-comment': ['error', 'always', {
+      line: {
+        markers: ['/'],
+        exceptions: ['-', '+'],
+      },
+      block: {
+        markers: ['!'],
+        exceptions: ['*'],
+        balanced: true,
+      },
+    }], // 注释规范
+    'import/no-mutable-exports': 'error', // 不要导出可变的绑定
+    'import/first': 'error', // import 放在其他所有语句之前
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
     'import/no-absolute-path': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'react/function-component-definition': ['error', {  // 定义组件形式
+      namedComponents: 'arrow-function',  // 允许使用箭头函数
+    }],
     'linebreak-style': [
       'error',
       'unix',
