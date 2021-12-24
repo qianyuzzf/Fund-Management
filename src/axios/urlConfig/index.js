@@ -5,7 +5,7 @@ const urlConfig = {
   ...login,
 }
 
-let URL = {}
+const URL = {}
 const proxyPrefix = '/api'
 _.forEach(urlConfig, (item, index) => {
   if (item.startsWith('/')) {

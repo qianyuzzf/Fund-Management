@@ -38,7 +38,7 @@ const connect = (target, mapState, mapDispatch) => {
         value = item.value
       }
       if (key && value) {
-        const row = _.find(modulesArray, (item) => item.value === value)
+        const row = _.find(modulesArray, (item2) => item2.value === value)
         if (row) {
           result.push({
             ...row,
@@ -48,15 +48,16 @@ const connect = (target, mapState, mapDispatch) => {
       }
     })
   } else if (type === 'object') {
-    for (const key in target) {
-      const row = _.find(modulesArray, (item) => item.value === target[key])
+    const keys = _.keys(target)
+    _.forEach(keys, (item) => {
+      const row = _.find(modulesArray, (item2) => item2.value === target[item])
       if (row) {
         result.push({
           ...row,
-          key,
+          key: item,
         })
       }
-    }
+    })
   } else {
     throw new Error('H.$store.connect ---> do not support arguments[0]')
   }
@@ -66,14 +67,16 @@ const connect = (target, mapState, mapDispatch) => {
     _.forEach(result, (item) => {
       result2[item.key] = state[item.value]
     })
-    typeof mapState === 'function' && (result2 = mapState(result2))
+    if (typeof mapState === 'function') {
+      result2 = mapState(result2)
+    }
     return result2
   }
 
   const mapDispatchToProps = (dispatch) => {
     let result2 = {}
     _.forEach(result, (item) => {
-      const uiKey = item.key + 'Reducer'
+      const uiKey = `${item.key}Reducer`
       const types = item.label.types || {}
       /**
        * 注入默认 RESET_STORE 方法，用于重置该模块的 state
@@ -87,17 +90,20 @@ const connect = (target, mapState, mapDispatch) => {
           })
         },
       }
-      for (const key in types) {
-        result2[uiKey][key] = (payload) => {
+      const keys = _.keys(types)
+      _.forEach(keys, (item2) => {
+        result2[uiKey][item2] = (payload) => {
           const action = {
-            type: types[key],
+            type: types[item2],
             payload,
           }
           dispatch(action)
         }
-      }
+      })
     })
-    typeof mapDispatch === 'function' && (result2 = mapDispatch(result2, dispatch))
+    if (typeof mapDispatch === 'function') {
+      result2 = mapDispatch(result2, dispatch)
+    }
     return result2
   }
   return ReduxConnect(mapStateToProps, mapDispatchToProps)

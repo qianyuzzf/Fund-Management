@@ -1,6 +1,6 @@
 // common
 import Context from '@/components/common/Context/index'
 
-export {
+export default {
   Context,
 }

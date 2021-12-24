@@ -89,13 +89,15 @@ module.exports = {
     }], // 注释规范
     'import/no-mutable-exports': 'error', // 不要导出可变的绑定
     'import/first': 'error', // import 放在其他所有语句之前
-    'import/extensions': 'off',
-    'import/no-unresolved': 'off',
-    'import/no-absolute-path': 'off',
-    'import/no-extraneous-dependencies': 'off',
+    'import/extensions': 'off',  // 关闭 import 扩展名检查
+    'import/no-unresolved': 'off',  // 关闭 import 依赖检查
+    // 'import/no-absolute-path': 'off',  // 关闭 import 绝度路径导入模块检查
+    'import/no-extraneous-dependencies': 'off',  // 关闭 import 导入无关的包检查
     'react/function-component-definition': ['error', {  // 定义组件形式
       namedComponents: 'arrow-function',  // 允许使用箭头函数
     }],
+    'react/prop-types': 'off',  // 关闭组件 props 定义类型检查
+    'react/jsx-props-no-spreading': 'off',  // 关闭 JSX 属性传播检查
     'linebreak-style': [
       'error',
       'unix',

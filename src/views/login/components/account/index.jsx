@@ -1,9 +1,8 @@
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Input} from 'antd-mobile'
 
 const Account = (props) => {
   const {
-    className = '',
     value = '',
     onChange,
     onBlur = () => {
@@ -11,12 +10,14 @@ const Account = (props) => {
   } = props || {}
   const [account, setAccount] = useState(value)
 
-  const onInputChange = (value) => {
+  const onInputChange = () => {
     let expectValue = value.toString().replace(/\s/g, '')
-    if (!isNaN(parseFloat(expectValue))) {
-      expectValue = expectValue.replace(/[\d\s]{4}/g, (char) => char + ' ').trim()
+    if (!Number.isNaN(parseFloat(expectValue))) {
+      expectValue = expectValue.replace(/[\d\s]{4}/g, (char) => `${char} `).trim()
       setAccount(expectValue)
-      typeof onChange === 'function' && onChange(expectValue)
+      if (typeof onChange === 'function') {
+        onChange(expectValue)
+      }
     }
   }
 

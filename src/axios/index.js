@@ -10,7 +10,7 @@ export const http = (fn, config = {}) => {
   return new Promise((resolve) => {
     const request = fn(axios)
     if (!request || !request.then) {
-      return resolve({
+      resolve({
         status: 500,
         data: null,
         code: 500,
@@ -19,28 +19,47 @@ export const http = (fn, config = {}) => {
     }
     request.then((resp) => {
       const respData = _.cloneDeep(resp) || {}
-      const status = respData.status
-      let data = respData.data ? (respData.data.data ? respData.data.data : respData.data) : {}
-      const _data = data || {}
-      typeof options.formatData === 'function' && (data = options.formatData(data))
+      const {status} = respData
+      let data = {}
+      if (respData.data) {
+        if (respData.data.data) {
+          data = respData.data.data
+        } else {
+          data = respData.data
+        }
+      }
+      const data2 = data || {}
+      if (typeof options.formatData === 'function') {
+        data = options.formatData(data)
+      }
       resolve({
         status,
         data,
-        code: _data.code || _data.suc || status,
-        msg: _data.msg || _data.message || options.success,
+        code: data2.code || data2.suc || status,
+        msg: data2.msg || data2.message || options.success,
       })
     }).catch((resp) => {
       const respData = _.cloneDeep(resp) || {}
-      const status = respData.status
-      let data = respData.data ? (respData.data.data ? respData.data.data : respData.data) : {}
-      const _data = data || {}
+      const {status} = respData
+      let data = {}
+      if (respData.data) {
+        if (respData.data.data) {
+          data = respData.data.data
+        } else {
+          data = respData.data
+        }
+      }
+      const data2 = data || {}
       resolve({
         status,
         data,
-        code: _data.code || _data.suc || status,
-        msg: _data.msg || _data.message || resp.msg || options.error,
+        code: data2.code || data2.suc || status,
+        msg: data2.msg || data2.message || resp.msg || options.error,
       })
-      console.error(resp)
+      throw new Error(resp)
     })
   })
+}
+
+export const xxx = () => {
 }

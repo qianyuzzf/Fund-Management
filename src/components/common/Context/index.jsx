@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
+import {Toast} from 'antd-mobile'
+import _ from 'lodash'
 import {validSafePath, checkPermissions, getFullPathRoutes, getPermissions} from '@/utils/permissions'
 import routes from '@/router/index'
-import _ from 'lodash'
-import {Toast} from 'antd-mobile'
 import H from '@/utils/helper'
 
 const systemRoutes = getFullPathRoutes(_.cloneDeep(routes))
@@ -13,8 +13,8 @@ const Context = (props) => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const doCheckPermissions = (routes = props.routes) => {
-    const flag = checkPermissions(location.pathname, systemRoutes, routes)
+  const doCheckPermissions = (routes2 = props.routes) => {
+    const flag = checkPermissions(location.pathname, systemRoutes, routes2)
     if (flag !== true) {
       if (flag === '403') {
         navigate('/exception/403', {replace: true})
@@ -56,17 +56,15 @@ const Context = (props) => {
     // 特殊路径相关直接豁免
     if (validSafePath(pathname)) {
       setIsInit(true)
-    } else {
       // 判断是否获取过权限相关数据
-      if (props.isLogin) {
-        // 获取过就直接判断是否有权限访问
-        doCheckPermissions()
-      } else {
-        // 没获取过就先获取权限数据,再判断是否有访问权限
-        doSetTruthPermissions().then((routes) => {
-          doCheckPermissions(routes)
-        })
-      }
+    } else if (props.isLogin) {
+      // 获取过就直接判断是否有权限访问
+      doCheckPermissions()
+    } else {
+      // 没获取过就先获取权限数据,再判断是否有访问权限
+      doSetTruthPermissions().then((routes2) => {
+        doCheckPermissions(routes2)
+      })
     }
   }
 
@@ -78,16 +76,12 @@ const Context = (props) => {
   return isInit && props.children
 }
 
-const mapStateToProps = (state) => {
-  return {
-    ...state.login,
-  }
-}
+const mapStateToProps = (state) => ({
+  ...state.login,
+})
 
-const mapDispatchToProps = (reducer) => {
-  return {
-    ...reducer.loginReducer,
-  }
-}
+const mapDispatchToProps = (reducer) => ({
+  ...reducer.loginReducer,
+})
 
 export default H.$store.connect('login', mapStateToProps, mapDispatchToProps)(Context)

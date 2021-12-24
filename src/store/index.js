@@ -1,25 +1,28 @@
+import _ from 'lodash'
 import {createStore} from 'redux'
 import modules from '@/store/modules/index'
 
 const getInitState = () => {
   const state = {}
-  for (const key in modules) {
-    state[key] = modules[key].state
-  }
+  const keys = _.keys(modules)
+  _.forEach(keys, (item) => {
+    state[item] = modules[item].state
+  })
   return state
 }
 
 const defaultState = getInitState()
 
-const store = (state = getInitState(), action) => {
+const store = (state, action) => {
   const app = {}
-  for (const key in modules) {
-    if (action.type === 'RESET_STORE' && action.payload === key) {
-      app[key] = defaultState[key]
+  const keys = _.keys(modules)
+  _.forEach(keys, (item) => {
+    if (action.type === 'RESET_STORE' && action.payload === item) {
+      app[item] = defaultState[item]
     } else {
-      app[key] = modules[key].reducer(state[key], action)
+      app[item] = modules[item].reducer((state && state[item]) ? state[item] : getInitState()[item], action)
     }
-  }
+  })
   return app
 }
 

@@ -17,10 +17,8 @@ export const deepLeafFilter = (arr, fn, key = 'children') => {
         row[key] = leftArr
         result.push(row)
       }
-    } else {
-      if (typeof fn === 'function' && fn(item)) {
-        result.push(row)
-      }
+    } else if (typeof fn === 'function' && fn(item)) {
+      result.push(row)
     }
   })
   return result
@@ -45,13 +43,14 @@ export const convertToArray = (object) => {
   let result = []
   const type = getType(object)
   if (type === 'object') {
-    for (const key in object) {
+    const keys = _.keys(object)
+    _.forEach(keys, (item) => {
       result.push({
-        key,
-        value: key,
-        label: object[key],
+        key: item,
+        value: item,
+        label: object[item],
       })
-    }
+    })
   } else if (type === 'array') {
     result = _.map(object, (item, index) => {
       const type2 = getType(item)
@@ -77,12 +76,12 @@ export const convertToArray = (object) => {
  * @param {number} deep
  */
 export const deepEach = (array, fn, key = 'children', deep = 0) => {
-  deep++
+  const newDeep = deep + 1
   _.forEach(array, (item, index) => {
     const children = item[key]
     if (children && children.length > 0) {
-      deepEach(children, fn, key, deep)
+      deepEach(children, fn, key, newDeep)
     }
-    return fn(item, index, deep)
+    return fn(item, index, newDeep)
   })
 }

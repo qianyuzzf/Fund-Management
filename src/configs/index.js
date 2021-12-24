@@ -6,3 +6,5 @@ export const notCheckPath = [
   {path: '/login', exact: false},
   {path: '/exception', exact: false},
 ]
+
+export const xxx = {}
